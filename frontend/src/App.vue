@@ -24,25 +24,25 @@ import { Icon } from '@iconify/vue';
       <aside class="sidebar">
         <ul class="sidebar-nav">
           <li>
-            <router-link to="#">
+            <router-link to="/announcements">
               <Icon icon="material-symbols:group" width="20" />
               <span>公司公告 / 最新消息</span>
             </router-link>
           </li>
           <li>
-            <router-link to="#">
+            <router-link to="/internal-systems">
               <Icon icon="material-symbols:computer" width="20" />
               <span>內部系統入口</span>
             </router-link>
           </li>
           <li>
-            <router-link to="#">
+            <router-link to="/it-services">
               <Icon icon="material-symbols:assignment-ind" width="20" />
               <span>IT服務入口</span>
             </router-link>
           </li>
           <li>
-            <router-link to="#">
+            <router-link to="/document-center">
               <Icon icon="material-symbols:apps" width="20" />
               <span>公司文件中心</span>
             </router-link>
@@ -54,13 +54,13 @@ import { Icon } from '@iconify/vue';
             </router-link>
           </li>
           <li>
-            <router-link to="#">
+            <router-link to="/activity-photos">
               <Icon icon="material-symbols:apps" width="20" />
               <span>活動照片</span>
             </router-link>
           </li>
           <li>
-            <router-link to="#">
+            <router-link to="/knowledge-base">
               <Icon icon="material-symbols:apps" width="20" />
               <span>文件搜尋 / 知識庫</span>
             </router-link>
