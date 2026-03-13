@@ -25,43 +25,43 @@ import { Icon } from '@iconify/vue';
         <ul class="sidebar-nav">
           <li>
             <router-link to="/announcements">
-              <Icon icon="material-symbols:group" width="20" />
-              <span>公司公告 / 最新消息</span>
+              <Icon icon="material-symbols:campaign-outline" width="20" />
+              <span>公司公告/最新消息</span>
             </router-link>
           </li>
           <li>
             <router-link to="/internal-systems">
-              <Icon icon="material-symbols:computer" width="20" />
+              <Icon icon="material-symbols:grid-view-outline" width="20" />
               <span>內部系統入口</span>
             </router-link>
           </li>
           <li>
             <router-link to="/it-services">
-              <Icon icon="material-symbols:assignment-ind" width="20" />
+              <Icon icon="material-symbols:build-outline" width="20" />
               <span>IT服務入口</span>
             </router-link>
           </li>
           <li>
             <router-link to="/document-center">
-              <Icon icon="material-symbols:apps" width="20" />
+              <Icon icon="material-symbols:folder-open-outline" width="20" />
               <span>公司文件中心</span>
             </router-link>
           </li>
           <li>
             <router-link to="/hrm">
-              <Icon icon="material-symbols:apps" width="20" />
+              <Icon icon="material-symbols:badge-outline" width="20" />
               <span>員工資訊</span>
             </router-link>
           </li>
           <li>
             <router-link to="/activity-photos">
-              <Icon icon="material-symbols:apps" width="20" />
+              <Icon icon="material-symbols:image-outline" width="20" />
               <span>活動照片</span>
             </router-link>
           </li>
           <li>
             <router-link to="/knowledge-base">
-              <Icon icon="material-symbols:apps" width="20" />
+              <Icon icon="material-symbols:menu-book-outline" width="20" />
               <span>文件搜尋 / 知識庫</span>
             </router-link>
           </li>
