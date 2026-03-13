@@ -1,0 +1,83 @@
+version: '3.8'
+
+# ==============================================================================
+# 服務定義 (Services)
+# ==============================================================================
+services:
+
+  # ----------------------------------------------------------------------------
+  # 1. 資料庫服務 (Database - MySQL)
+  # ----------------------------------------------------------------------------
+  db:
+    image: mysql:8.0
+    container_name: production-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE:      company_assets
+      MYSQL_USER:          user
+      MYSQL_PASSWORD:      password
+    
+    # [安全性提示] 
+    # 正式環境通常不對外開放 3306 埠，僅供內部的 api 服務連線。
+    # 若需本地工具 (如 Workbench) 連線調試，請取消下方註解：
+    # ports:
+    #   - "3306:3306"
+    
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+    volumes:
+      - mysql-production-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # ----------------------------------------------------------------------------
+  # 2. 後端 API 服務 (Backend - Node.js/Python/Go)
+  # ----------------------------------------------------------------------------
+  api:
+    build: ./backend
+    container_name: production-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST:     db
+      DB_USER:     root
+      DB_PASSWORD: rootpassword
+      DB_NAME:     company_assets
+      PORT:        3000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # ----------------------------------------------------------------------------
+  # 3. 前端網頁服務 (Frontend - Nginx)
+  # ----------------------------------------------------------------------------
+  web:
+    build: ./frontend
+    container_name: production-web
+    restart: always
+    ports:
+      - "8090:80"
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+# ==============================================================================
+# 資源定義 (Volumes & Networks)
+# ==============================================================================
+volumes:
+  mysql-production-data:
+    name: mysql-production-data
+
+networks:
+  app-network:
+    driver: bridge
+    name: app-network

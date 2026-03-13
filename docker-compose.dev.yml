@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # ------------------------------------
+  # 資料庫服務 (MySQL)
+  # ------------------------------------
+  db:
+    image: mysql:8.0
+    container_name: dev-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE:      company_assets
+      MYSQL_USER:          user
+      MYSQL_PASSWORD:      password
+    ports:
+      # 開發環境開放 3306，方便從宿主機使用 Workbench/DBeaver 連線
+      - "3306:3306"
+    volumes:
+      # 確保資料庫重啟後資料不會消失
+      - mysql-dev-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # ------------------------------------
+  # 後端 API 服務 (Node.js)
+  # ------------------------------------
+  api:
+    build: ./backend
+    container_name: dev-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST:     db
+      DB_USER:     root
+      DB_PASSWORD: rootpassword
+      DB_NAME:     company_assets
+      PORT:        3000
+    volumes:
+      # 掛載原始碼實作熱重載 (Hot Reload)
+      - ./backend:/app
+      # 防止本地 node_modules 覆蓋容器內的環境版本
+      - /app/node_modules
+    # 覆蓋 Dockerfile 的 CMD，改用開發工具 (如 nodemon) 啟動
+    command: npm run dev
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # ------------------------------------
+  # 前端網頁服務 (Vue/Vite)
+  # ------------------------------------
+  web:
+    build:
+      context: ./frontend
+      # 指向 Dockerfile 中的開發階段，不進入 Nginx 生產階段
+      target:  build-stage
+    container_name: dev-web
+    restart: always
+    ports:
+      - "8080:5173"
+    volumes:
+      # 實作前端熱重載 (HMR)，修改程式碼即時反映在網頁
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+# ------------------------------------
+# 持久化空間與網路設定
+# ------------------------------------
+volumes:
+  mysql-dev-data:
+    name: mysql-dev-data
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge

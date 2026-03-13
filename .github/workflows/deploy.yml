@@ -1,0 +1,22 @@
+#CI/CD pipeline for deploying a full-stack application using Docker Compose on a self-hosted runner
+
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy
+        run: |
+          cd ~/my-fullstack-app
+          git pull 
+          docker compose up -d --build
+          docker image prune -f

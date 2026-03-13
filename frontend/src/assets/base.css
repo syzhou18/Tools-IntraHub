@@ -1,0 +1,141 @@
+/* ==========================================================================
+   1. 全域重置與基礎樣式 (Global Resets)
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #f4f7f6;
+  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   2. 核心佈局架構 (Core Layout - Flexbox Logic)
+   ========================================================================== */
+
+/* 最外層容器：控制垂直排列 */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* 鎖定視窗高度 */
+  overflow: hidden; /* 防止最外層出現滾動條 */
+}
+
+/* 頂部導覽列 */
+.app-header {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0; /* 禁止壓縮高度 */
+  z-index: 100;
+}
+
+/* 下方主容器：控制水平排列 (側邊欄 + 內容) */
+.main-container {
+  display: flex;
+  flex: 1; /* 自動填滿 Header 以外的剩餘高度 */
+  overflow: hidden; /* 確保內部滾動條獨立 */
+}
+
+/* 左側側邊欄 */
+.sidebar {
+  width: 220px;
+  background-color: #343a40; /* 採用專業深色風格 */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0; /* 禁止壓縮寬度 */
+  overflow-y: auto; /* 選單過多時可獨立滾動 */
+}
+
+/* 主要內容區 */
+.main-content {
+  flex: 1;
+  background-color: #f4f7f6;
+  padding: 20px;
+  overflow-y: auto; /* 內容過長時在此產生滾動條 */
+  scroll-behavior: smooth;
+}
+
+/* ==========================================================================
+   3. 內容區組件樣式 (UI Components)
+   ========================================================================== */
+
+/* 標誌區域 (Logo) */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 頁面內容容器 (在 main-content 內部使用) */
+.page-container h1 {
+  color: #343a40;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* 頁面操作區 (如搜尋欄、新增按鈕列) */
+.page-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   4. 導航選單樣式 (Sidebar Navigation)
+   ========================================================================== */
+
+.sidebar-nav {
+  list-style: none;
+  padding: 10px 0;
+  margin: 0;
+}
+
+.sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 25px;
+  text-decoration: none;
+  color: #adb5bd; /* 預設灰白字 */
+  font-weight: 500;
+  font-size: 15px;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+}
+
+/* 懸浮狀態 */
+.sidebar-nav li a:hover {
+  background-color: #495057;
+  color: #fff;
+}
+
+/* 當前頁面高亮 (Vue Router 相容) */
+.sidebar-nav li a.router-link-active {
+  background-color: #212529;
+  color: #fff;
+  border-left-color: #0d6efd; /* 亮藍色指示條 */
+}
