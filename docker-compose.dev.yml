@@ -6,7 +6,7 @@ services:
   # ------------------------------------
   db:
     image: mysql:8.0
-    container_name: dev-db
+    container_name: intrahub-db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -27,7 +27,7 @@ services:
   # ------------------------------------
   api:
     build: ./backend
-    container_name: dev-api
+    container_name: intrahub-api
     restart: always
     ports:
       - "3000:3000"
@@ -55,9 +55,8 @@ services:
   web:
     build:
       context: ./frontend
-      # 指向 Dockerfile 中的開發階段，不進入 Nginx 生產階段
-      target:  build-stage
-    container_name: dev-web
+      dockerfile: Dockerfile.dev
+    container_name: intrahub-web
     restart: always
     ports:
       - "8080:5173"

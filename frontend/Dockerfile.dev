@@ -1,0 +1,15 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# 只複製 package.json 先安裝套件（利用快取）
+COPY package*.json ./
+RUN npm install
+
+# 這裡不 COPY . .，因為我們會用 Docker Compose 的 Volume 掛載進來
+# 也不需要 RUN npm run build
+
+EXPOSE 5173 
+# ^ 根據你的框架修改 Port (Vite 預設 5173, Vue CLI 預設 8080)
+
+CMD ["npm", "run", "dev"]

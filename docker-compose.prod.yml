@@ -43,7 +43,7 @@ services:
     container_name: production-api
     restart: always
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       DB_HOST:     db
       DB_USER:     root
@@ -60,7 +60,9 @@ services:
   # 3. 前端網頁服務 (Frontend - Nginx)
   # ----------------------------------------------------------------------------
   web:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
     container_name: production-web
     restart: always
     ports:

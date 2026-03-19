@@ -26,7 +26,7 @@ import { Icon } from '@iconify/vue';
           <li>
             <router-link to="/announcements">
               <Icon icon="material-symbols:campaign-outline" width="20" />
-              <span>公司公告/最新消息</span>
+              <span>公司公告</span>
             </router-link>
           </li>
           <li>

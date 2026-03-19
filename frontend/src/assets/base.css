@@ -125,6 +125,7 @@ html, body {
   font-size: 15px;
   border-left: 4px solid transparent;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 /* 懸浮狀態 */

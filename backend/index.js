@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true })); // 解析 URL-encoded 請求
 // --- API 路由掛載區 ---
 
 // 測試與監控
-app.use('/api/test', testRouter);
+//app.use('/api/test', testRouter);
 
 // 核心功能模組
 app.use('/api/users', userRoutes);         // 使用者管理
