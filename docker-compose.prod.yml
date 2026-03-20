@@ -1,37 +1,33 @@
 version: '3.8'
 
-# ==============================================================================
-# 服務定義 (Services)
-# ==============================================================================
 services:
-
   # ----------------------------------------------------------------------------
-  # 1. 資料庫服務 (Database - MySQL)
+  # 1. 資料庫服務 (Database - PostgreSQL)
   # ----------------------------------------------------------------------------
   db:
-    image: mysql:8.0
+    image: postgres:16-alpine
     container_name: production-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE:      company_assets
-      MYSQL_USER:          user
-      MYSQL_PASSWORD:      password
-    
-    # [安全性提示] 
-    # 正式環境通常不對外開放 3306 埠，僅供內部的 api 服務連線。
-    # 若需本地工具 (如 Workbench) 連線調試，請取消下方註解：
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: company_assets
+
+    # [安全性提示]
+    # 正式環境通常不對外開放 5432 埠，僅供內部的 api 服務連線。
+    # 若需本地工具 (如 DBeaver) 連線調試，請取消下方註解：
     # ports:
-    #   - "3306:3306"
-    
+    #   - "5432:5432"
+
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d company_assets"]
       interval: 5s
       timeout: 5s
       retries: 5
 
     volumes:
-      - mysql-production-data:/var/lib/mysql
+      - postgres-production-data:/var/lib/postgresql/data
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - app-network
 
@@ -45,11 +41,12 @@ services:
     ports:
       - "3001:3000"
     environment:
-      DB_HOST:     db
-      DB_USER:     root
-      DB_PASSWORD: rootpassword
-      DB_NAME:     company_assets
-      PORT:        3000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgrespassword
+      DB_NAME: company_assets
+      PORT: 3000
     depends_on:
       db:
         condition: service_healthy
@@ -72,12 +69,9 @@ services:
     networks:
       - app-network
 
-# ==============================================================================
-# 資源定義 (Volumes & Networks)
-# ==============================================================================
 volumes:
-  mysql-production-data:
-    name: mysql-production-data
+  postgres-production-data:
+    name: postgres-production-data
 
 networks:
   app-network:
