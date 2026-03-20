@@ -2,23 +2,21 @@ version: '3.8'
 
 services:
   # ------------------------------------
-  # 資料庫服務 (MySQL)
+  # 資料庫服務 (PostgreSQL)
   # ------------------------------------
   db:
-    image: mysql:8.0
+    image: postgres:16-alpine
     container_name: intrahub-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE:      company_assets
-      MYSQL_USER:          user
-      MYSQL_PASSWORD:      password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: company_assets
     ports:
-      # 開發環境開放 3306，方便從宿主機使用 Workbench/DBeaver 連線
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      # 確保資料庫重啟後資料不會消失
-      - mysql-dev-data:/var/lib/mysql
+      - postgres-dev-data:/var/lib/postgresql/data
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - app-network
 
@@ -32,17 +30,15 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DB_HOST:     db
-      DB_USER:     root
-      DB_PASSWORD: rootpassword
-      DB_NAME:     company_assets
-      PORT:        3000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgrespassword
+      DB_NAME: company_assets
+      PORT: 3000
     volumes:
-      # 掛載原始碼實作熱重載 (Hot Reload)
       - ./backend:/app
-      # 防止本地 node_modules 覆蓋容器內的環境版本
       - /app/node_modules
-    # 覆蓋 Dockerfile 的 CMD，改用開發工具 (如 nodemon) 啟動
     command: npm run dev
     depends_on:
       - db
@@ -61,7 +57,6 @@ services:
     ports:
       - "8080:5173"
     volumes:
-      # 實作前端熱重載 (HMR)，修改程式碼即時反映在網頁
       - ./frontend:/app
       - /app/node_modules
     command: npm run dev
@@ -72,12 +67,9 @@ services:
     networks:
       - app-network
 
-# ------------------------------------
-# 持久化空間與網路設定
-# ------------------------------------
 volumes:
-  mysql-dev-data:
-    name: mysql-dev-data
+  postgres-dev-data:
+    name: postgres-dev-data
 
 networks:
   app-network:

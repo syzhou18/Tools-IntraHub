@@ -1,16 +1,18 @@
-const mysql = require('mysql2');
+const { Pool } = require('pg');
 require('dotenv').config();
 
-// 建立連線池
-const pool = mysql.createPool({
+const pool = new Pool({
   host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT || 5432),
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+  max: 10,
+  idleTimeoutMillis: 30000
 });
 
-// 匯出 promise 版本的連線池 (這很重要，讓你可以用 await)
-module.exports = pool.promise();
+pool.on('error', (err) => {
+  console.error(' [Database Error] PostgreSQL pool 發生未預期錯誤:', err);
+});
+
+module.exports = pool;
