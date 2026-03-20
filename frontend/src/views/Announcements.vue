@@ -251,11 +251,41 @@ const normalizeDateInput = (value) => {
   return localDate.toISOString().slice(0, 16)
 }
 
+const toIsoOrNull = (value) => {
+  if (!value) return null
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) {
+    return null
+  }
+  return date.toISOString()
+}
+
 const serializeForm = () => ({
   ...form,
-  start_at: form.start_at ? new Date(form.start_at).toISOString() : null,
-  end_at: form.end_at ? new Date(form.end_at).toISOString() : null,
+  start_at: toIsoOrNull(form.start_at),
+  end_at: toIsoOrNull(form.end_at),
 })
+
+const validateForm = () => {
+  if (form.start_at && !toIsoOrNull(form.start_at)) {
+    return '開始時間格式不正確'
+  }
+
+  if (form.end_at && !toIsoOrNull(form.end_at)) {
+    return '結束時間格式不正確'
+  }
+
+  if (form.start_at && form.end_at) {
+    const startAt = new Date(form.start_at)
+    const endAt = new Date(form.end_at)
+
+    if (!Number.isNaN(startAt.getTime()) && !Number.isNaN(endAt.getTime()) && startAt > endAt) {
+      return '開始時間不可晚於結束時間'
+    }
+  }
+
+  return ''
+}
 
 const showBanner = (text, type = 'success') => {
   message.text = text
@@ -354,6 +384,13 @@ const closeFormModal = () => {
 }
 
 const submitForm = async () => {
+  const validationError = validateForm()
+  if (validationError) {
+    error.value = validationError
+    showBanner(validationError, 'error')
+    return
+  }
+
   submitting.value = true
   error.value = ''
 
