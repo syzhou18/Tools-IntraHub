@@ -11,7 +11,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgrespassword
-      POSTGRES_DB: company_assets
+      POSTGRES_DB: intrahub
     ports:
       - "5432:5432"
     volumes:
@@ -34,7 +34,7 @@ services:
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgrespassword
-      DB_NAME: company_assets
+      DB_NAME: intrahub
       PORT: 3000
     volumes:
       - ./backend:/app
