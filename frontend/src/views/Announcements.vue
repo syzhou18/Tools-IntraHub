@@ -2,8 +2,7 @@
   <section class="page">
     <div class="page-header">
       <div>
-        <h1>📢 公司公告管理</h1>
-        <p>支援公告查詢、建立、編輯、刪除與置頂管理。</p>
+        <h1>📢 公司公告</h1>
       </div>
       <button class="btn btn-primary" @click="openCreateModal">新增公告</button>
     </div>

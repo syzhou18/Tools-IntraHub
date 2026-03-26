@@ -6,7 +6,7 @@ services:
   # ------------------------------------
   db:
     image: postgres:16-alpine
-    container_name: intrahub-db
+    container_name: intrahub-development-db
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -25,7 +25,7 @@ services:
   # ------------------------------------
   api:
     build: ./backend
-    container_name: intrahub-api
+    container_name: intrahub-development-api
     restart: always
     ports:
       - "3000:3000"
@@ -38,7 +38,6 @@ services:
       PORT: 3000
     volumes:
       - ./backend:/app
-      - /app/node_modules
     command: npm run dev
     depends_on:
       - db
@@ -52,13 +51,13 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    container_name: intrahub-web
+    container_name: intrahub-development-web
     restart: always
     ports:
       - "8080:5173"
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+      - web_node_modules:/app/node_modules
     command: npm run dev
     environment:
       - VITE_API_URL=http://localhost:3000
@@ -70,6 +69,7 @@ services:
 volumes:
   postgres-dev-data:
     name: postgres-dev-data
+  web_node_modules:
 
 networks:
   app-network:

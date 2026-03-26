@@ -6,12 +6,12 @@ services:
   # ----------------------------------------------------------------------------
   db:
     image: postgres:16-alpine
-    container_name: production-db
+    container_name: intrahub-production-db
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgrespassword
-      POSTGRES_DB: company_assets
+      POSTGRES_DB: intrahub
 
     # [安全性提示]
     # 正式環境通常不對外開放 5432 埠，僅供內部的 api 服務連線。
@@ -20,7 +20,7 @@ services:
     #   - "5432:5432"
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d company_assets"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d intrahub"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -36,7 +36,7 @@ services:
   # ----------------------------------------------------------------------------
   api:
     build: ./backend
-    container_name: production-api
+    container_name: intrahub-production-api
     restart: always
     ports:
       - "3001:3000"
@@ -60,7 +60,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-    container_name: production-web
+    container_name: intrahub-production-web
     restart: always
     ports:
       - "8090:80"
