@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # ----------------------------------------------------------------------------
   # 1. 資料庫服務 (Database - PostgreSQL)
@@ -45,7 +43,7 @@ services:
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgrespassword
-      DB_NAME: company_assets
+      DB_NAME: intrahub
       PORT: 3000
     depends_on:
       db:
