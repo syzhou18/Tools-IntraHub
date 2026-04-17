@@ -5,17 +5,35 @@
 
     <ul class="system-links">
       <li>
-        <a class="system-link" href="#" aria-label="人資系統連結">
+        <a
+          class="system-link"
+          href="https://portal.nueip.com/login"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="人資系統連結"
+        >
           人資系統
         </a>
       </li>
       <li>
-        <a class="system-link" href="#" aria-label="LibreNMS 連結">
+        <a
+          class="system-link"
+          href="http://192.168.2.168:8010/overview"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LibreNMS 連結"
+        >
           LibreNMS
         </a>
       </li>
       <li>
-        <a class="system-link" href="#" aria-label="會議室預約連結">
+        <a
+          class="system-link"
+          href="http://192.168.100.200/day.php"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="會議室預約連結"
+        >
           會議室預約
         </a>
       </li>
