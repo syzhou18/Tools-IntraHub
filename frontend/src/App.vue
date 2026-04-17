@@ -1,26 +1,50 @@
 <script setup>
+import { computed, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-// useRoute 在這裡可以用來判斷路由，但在 CSS 中我們已經用了 router-link-active 自動處理樣式
-// 所以這裡暫時不需要額外邏輯
+import { clearAuth, getUser } from './utils/auth';
+
+const route = useRoute();
+const router = useRouter();
+const currentUser = ref(getUser());
+
+watch(
+  () => route.fullPath,
+  () => {
+    currentUser.value = getUser();
+  }
+);
+
+const isLoginPage = computed(() => route.path === '/login');
+
+const displayName = computed(() => {
+  return currentUser.value?.displayName || currentUser.value?.username || '訪客';
+});
+
+const logout = () => {
+  clearAuth();
+  currentUser.value = null;
+  router.push('/login');
+};
 </script>
 
 <template>
-  <div class="app-layout">
-    
+  <router-view v-if="isLoginPage" />
+
+  <div v-else class="app-layout">
     <header class="app-header">
       <div class="logo">
         <Icon icon="ic:baseline-shield" width="28" height="28" color="#343a40" />
         <h1>Tools Intranet Portal <span class="badge">CI/CD</span></h1>
       </div>
-      
-      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-         <span style="font-size: 14px; color: #666;">Admin</span>
-         <Icon icon="carbon:user-avatar-filled" width="24" height="24" color="#666" />
+
+      <div class="header-user">
+        <span class="header-user-name">{{ displayName }}</span>
+        <button class="logout-btn" type="button" @click="logout">登出</button>
       </div>
     </header>
 
     <main class="main-container">
-      
       <aside class="sidebar">
         <ul class="sidebar-nav">
           <li>
@@ -66,18 +90,21 @@ import { Icon } from '@iconify/vue';
             </router-link>
           </li>
         </ul>
+
+        <div class="sidebar-user-footer">
+          <Icon icon="carbon:user-avatar-filled" width="20" color="#ced4da" />
+          <span>{{ displayName }}</span>
+        </div>
       </aside>
 
       <div class="main-content">
         <router-view></router-view>
       </div>
-
     </main>
   </div>
 </template>
 
 <style>
-
 .badge {
   font-size: 12px;
   background-color: #ffeeba;
@@ -87,50 +114,34 @@ import { Icon } from '@iconify/vue';
   font-weight: normal;
 }
 
-
-
-/* 按鈕 */
-.btn {
-  display: inline-flex;
+.header-user {
+  margin-left: auto;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  cursor: pointer;
+  gap: 10px;
+}
+
+.header-user-name {
   font-size: 14px;
-  transition: 0.2s;
-  background-color: #fff;
-  border-color: #ced4da;
-  color: #333;
-}
-.btn:hover { background-color: #f8f9fa; }
-
-.btn-success {
-  background-color: #198754;
-  color: #fff;
-  border-color: #198754;
-}
-.btn-success:hover { background-color: #157347; }
-
-/* 表格 */
-.data-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-.data-table th, .data-table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #dee2e6;
-  text-align: left;
-}
-.data-table thead {
-  background-color: #343a40;
-  color: #fff;
+  color: #666;
 }
 
+.logout-btn {
+  border: 1px solid #ced4da;
+  background: #fff;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.sidebar-user-footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #e9ecef;
+  font-size: 14px;
+}
 </style>

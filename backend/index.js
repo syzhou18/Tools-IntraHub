@@ -5,6 +5,7 @@ const cors = require('cors');
 // --- 引入各模組 Router ---
 const userRoutes = require('./routes/users');
 const announcementRoutes = require('./routes/announcements');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true })); // 解析 URL-encoded 請求
 // 核心功能模組
 app.use('/api/users', userRoutes);         // 使用者管理
 app.use('/api/announcements', announcementRoutes); // 公司公告
+app.use('/api/auth', authRoutes); // FreeIPA 登入
 
 
 // --- 靜態路由與首頁 ---
